@@ -7,7 +7,9 @@
 
 transform/pos = Vector2( 300, 400 )
 script/script = ExtResource( 1 )
-__meta__ = { "__editor_plugin_screen__":"Script" }
+__meta__ = {
+"__editor_plugin_screen__": "Script"
+}
 fadeSpeed = 0.7
 initTime = 1
 showingTime = 2
