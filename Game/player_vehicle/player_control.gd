@@ -49,7 +49,6 @@ func _ready():
 
 # Fixed Process
 func _integrate_forces(state):
-
 	# Drag (0 means we will never slow down ever. Like being in space.)	
 	_velocity *= drag_coefficient
 	var collision_torque = 0
@@ -118,8 +117,7 @@ func _integrate_forces(state):
 		if(axis < stick_min):
 			axis = 1 # Set it to 1 since we are not using the left stick
 		
-		state.set_angular_velocity(-torque * abs(axis))
-	
+		state.set_angular_velocity(-torque * abs(axis))	
 	# Steer Right
 	elif(Input.is_action_pressed(input_steer_right)):
 		# TODO: Find a better way to handle this instead of hard-coding the check for Left Stick Axis
@@ -148,3 +146,4 @@ func get_up_velocity():
 # Returns right velocity
 func get_right_velocity():
 	return get_right() * _velocity.dot(get_right())
+

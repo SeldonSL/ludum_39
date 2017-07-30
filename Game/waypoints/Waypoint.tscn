@@ -1,0 +1,37 @@
+[gd_scene load_steps=3 format=1]
+
+[ext_resource path="res://Game/waypoints/Waypoint.gd" type="Script" id=1]
+
+[sub_resource type="CircleShape2D" id=1]
+
+custom_solver_bias = 0.0
+radius = 10.0
+
+[node name="Waypoint" type="Area2D" groups=[
+"waypoints",
+]]
+
+input/pickable = true
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 2, 0, 0, 2, 0, 0 )
+shapes/0/trigger = false
+gravity_vec = Vector2( 0, 1 )
+gravity = 98.0
+linear_damp = 0.1
+angular_damp = 1.0
+script/script = ExtResource( 1 )
+Number = 0
+Last = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+
+transform/scale = Vector2( 2, 2 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
+[node name="center" type="Position2D" parent="."]
+
+[connection signal="body_enter" from="." to="." method="_on_Waypoint_body_enter"]
+
+

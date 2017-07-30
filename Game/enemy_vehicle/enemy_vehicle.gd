@@ -8,11 +8,6 @@ extends RigidBody2D
 # - NB: If you do not use Left Joystick update Input code.
 # ---------------------------------------------------------
 
-# Input Map Strings - Must be set in Project Settings
-export (String) var input_steer_left = "left"
-export (String) var input_steer_right = "right"
-export (String) var input_accelerate = "acc"
-export (String) var input_break = "break"
 
 # Joystick Deadzone Thresholds
 var stick_min = 0.07 # If the axis is smaller, behave as if it were 0
@@ -34,6 +29,8 @@ var _drift_factor = wheel_grip_sticky # Determines how much (or little) your veh
 
 # Vehicle velocity
 var _velocity = Vector2(0, 0)
+var _current_waypoint = 0
+var _waypoint_pos = Vector2()
 
 # Start
 func _ready():
@@ -49,7 +46,7 @@ func _ready():
 
 # Fixed Process
 func _integrate_forces(state):
-
+	var steer_dir = -get_waypoint_direction()
 	# Drag (0 means we will never slow down ever. Like being in space.)	
 	_velocity *= drag_coefficient
 	var collision_torque = 0
@@ -80,22 +77,11 @@ func _integrate_forces(state):
 	_velocity = get_up_velocity() + (get_right_velocity() * _drift_factor)
 
 	# Accelerate
-	if(Input.is_action_pressed(input_accelerate)):
-		# TODO: Find a better way to handle this instead of hard-coding the check for Triggers
-		var axis = Input.get_joy_axis(0, 7) # Right Trigger
-		if(axis == 0):
-			axis = 1 # Set it to 1 since we are not using the trigger
-		
-		_velocity += get_up() * acceleration * axis
-	# Break / Reverse
-	elif(Input.is_action_pressed(input_break)):
-		# TODO: Find a better way to handle this instead of hard-coding the check for Triggers
-		var axis = Input.get_joy_axis(0, 6) # Left Trigger
-		if(axis == 0): 
-			axis = 1 # Set it to 1 since we are not using the trigger
-		
-		_velocity -= get_up() * acceleration * axis
+	var axis = 1 # Set it to 1 since we are not using the trigger
+	_velocity += get_up() * acceleration * axis
 
+	# Break	
+	
 	# Prevent exceeding max velocity
 	# 
 	# This is done by getting a Vector2 that points up 
@@ -111,23 +97,13 @@ func _integrate_forces(state):
 	# Torque depends that the vehicle is moving
 	var torque = lerp(0, steering_torque, _velocity.length() / max_forward_velocity)
 	
-	# Steer Left
-	if(Input.is_action_pressed(input_steer_left)):
-		# TODO: Find a better way to handle this instead of hard-coding the check for Left Stick Axis
-		var axis = Input.get_joy_axis(0, 0) # Left Stick Axis
-		if(axis < stick_min):
-			axis = 1 # Set it to 1 since we are not using the left stick
-		
-		state.set_angular_velocity(-torque * abs(axis))
+	# Steer
+	if steer_dir > 0:
+		state.set_angular_velocity(-torque)
+	else:
+		state.set_angular_velocity(torque)
 	
-	# Steer Right
-	elif(Input.is_action_pressed(input_steer_right)):
-		# TODO: Find a better way to handle this instead of hard-coding the check for Left Stick Axis
-		var axis = Input.get_joy_axis(0, 0) # Left Stick Axis
-		if(axis < stick_min):
-			axis = 1 # Set it to 1 since we are not using the left stick
-		
-		state.set_angular_velocity(torque * abs(axis))
+	
 	
 	# Apply the force
 	state.set_linear_velocity(_velocity)
@@ -148,3 +124,15 @@ func get_up_velocity():
 # Returns right velocity
 func get_right_velocity():
 	return get_right() * _velocity.dot(get_right())
+
+func get_waypoint_direction():
+	var waypoints = get_tree().get_nodes_in_group("waypoints")
+	for w in waypoints:
+		if w.Number == _current_waypoint:
+			_waypoint_pos = w.get_node('center').get_global_pos()
+	var head_pos = get_node('head_pos').get_global_pos()
+	var head_dir = (-get_global_pos() + head_pos).normalized()
+	var waypoint_dir = (-get_global_pos() + _waypoint_pos).normalized()
+	var rotation_dir = head_dir.dot(waypoint_dir)
+	return rotation_dir
+
