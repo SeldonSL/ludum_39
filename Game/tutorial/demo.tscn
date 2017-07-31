@@ -1,10 +1,13 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=10 format=1]
 
 [ext_resource path="res://Game/tutorial/tilemap.scn" type="PackedScene" id=1]
 [ext_resource path="res://Game/player_vehicle/PlayerCar.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Game/enemy_vehicle/EnemyCar.tscn" type="PackedScene" id=3]
 [ext_resource path="res://icon.png" type="Texture" id=4]
 [ext_resource path="res://Game/waypoints/Waypoint.tscn" type="PackedScene" id=5]
+[ext_resource path="res://Game/tutorial/energy2.png" type="Texture" id=6]
+[ext_resource path="res://Game/tutorial/energy.png" type="Texture" id=7]
+[ext_resource path="res://Game/tutorial/power_bar.gd" type="Script" id=8]
 
 [sub_resource type="RectangleShape2D" id=1]
 
@@ -32,6 +35,7 @@ transform/pos = Vector2( 2096.11, 1606.37 )
 transform/rot = -94.7198
 acceleration = 50
 max_forward_velocity = 4000
+power_rate = 0.5
 
 [node name="Camera2D" type="Camera2D" parent="PlayerCar"]
 
@@ -146,25 +150,74 @@ _update_shape_index = 0
 [node name="Waypoint" parent="." instance=ExtResource( 5 )]
 
 transform/pos = Vector2( 13729.1, 1730.89 )
-transform/scale = Vector2( 30, 30 )
+transform/scale = Vector2( 50, 50 )
 
 [node name="Waypoint1" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 13758.6, 13808.1 )
-transform/scale = Vector2( 30, 30 )
+transform/pos = Vector2( 13729.1, 13630.9 )
+transform/scale = Vector2( 50, 50 )
 Number = 1
 
 [node name="Waypoint2" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 1947.19, 13749 )
-transform/scale = Vector2( 30, 30 )
+transform/pos = Vector2( 1976.72, 13689.9 )
+transform/scale = Vector2( 50, 50 )
 Number = 2
 
 [node name="Waypoint3" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 1829.08, 1583.24 )
-transform/scale = Vector2( 30, 30 )
+transform/pos = Vector2( 1947.19, 1671.83 )
+transform/scale = Vector2( 50, 50 )
 Number = 3
 Last = true
 
+[node name="ui" type="CanvasLayer" parent="."]
 
+layer = 1
+offset = Vector2( 0, 0 )
+rotation = 0.0
+scale = Vector2( 1, 1 )
+
+[node name="power_bar" type="TextureProgress" parent="ui"]
+
+rect/scale = Vector2( 0.6, 0.3 )
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+margin/left = 180.0
+margin/top = 18.0
+margin/right = 725.0
+margin/bottom = 115.0
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 100.0
+range/exp_edit = false
+range/rounded = false
+texture/under = ExtResource( 6 )
+texture/over = null
+texture/progress = ExtResource( 7 )
+radial_fill/fill_degrees = 360.0
+radial_fill/center_offset = Vector2( 0, 0 )
+script/script = ExtResource( 8 )
+
+[node name="Label" type="Label" parent="ui"]
+
+rect/scale = Vector2( 3, 3 )
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 51.0
+margin/top = 10.0
+margin/right = 91.0
+margin/bottom = 24.0
+text = "Power"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+
+[editable path="PlayerCar"]

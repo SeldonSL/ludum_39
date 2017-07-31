@@ -16,7 +16,9 @@ func _on_Waypoint_body_enter( body ):
 	if body.is_in_group('enemies'):
 		var enemy = body
 		if Last:
-			enemy._current_waypoint = 0
+			if enemy._current_waypoint == Number:
+				enemy._current_waypoint = 0
 		else:
-			enemy._current_waypoint += 1
+			if enemy._current_waypoint == Number:
+				enemy._current_waypoint += 1
 

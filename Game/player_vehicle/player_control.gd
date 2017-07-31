@@ -35,6 +35,13 @@ var _drift_factor = wheel_grip_sticky # Determines how much (or little) your veh
 # Vehicle velocity
 var _velocity = Vector2(0, 0)
 
+export var max_power = 100
+export var max_damage = 10
+var damage = 0
+var power= 100
+export var power_rate = 0.1
+var frozen = false
+
 # Start
 func _ready():
 	# Top Down Physics
@@ -46,9 +53,15 @@ func _ready():
 	
 	set_fixed_process(true)
 
+func _fixed_process(delta):
+	if Input.is_action_pressed(input_accelerate):
+		power -= delta * power_rate
 
+	
 # Fixed Process
 func _integrate_forces(state):
+	if frozen:
+		return
 	# Drag (0 means we will never slow down ever. Like being in space.)	
 	_velocity *= drag_coefficient
 	var collision_torque = 0
@@ -58,6 +71,8 @@ func _integrate_forces(state):
 			
 			if (cc):
 				_velocity+=state.get_contact_local_normal(i)*300
+				#state.set_angular_velocity(sign(dp.x)*10.0)
+
 				break
 	
 	# If we can drift
@@ -146,4 +161,11 @@ func get_up_velocity():
 # Returns right velocity
 func get_right_velocity():
 	return get_right() * _velocity.dot(get_right())
+	
+func add_damage(damage):
+	if get_node("destroy").get_time_left() == 0:
+		frozen = true
+		get_node("destroy").start()
 
+func _on_destroy_timeout():
+		frozen = false

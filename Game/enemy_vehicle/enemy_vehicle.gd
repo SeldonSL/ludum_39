@@ -27,10 +27,17 @@ export (int) var drift_extremum = 250 # Right velocity higher than this will cau
 export (int) var drift_asymptote = 20 # During a slide you need to reduce right velocity to this to gain control
 var _drift_factor = wheel_grip_sticky # Determines how much (or little) your vehicle drifts
 
-# Vehicle velocity
+
 var _velocity = Vector2(0, 0)
 var _current_waypoint = 0
 var _waypoint_pos = Vector2()
+
+var frozen = false
+export var max_power = 100
+var power= 100
+export var power_rate = 0.1
+export var bullets_fired = 0
+export var bullets = 4
 
 # Start
 func _ready():
@@ -46,6 +53,8 @@ func _ready():
 
 # Fixed Process
 func _integrate_forces(state):
+	if frozen:
+		return
 	var steer_dir = -get_waypoint_direction()
 	# Drag (0 means we will never slow down ever. Like being in space.)	
 	_velocity *= drag_coefficient
@@ -135,4 +144,33 @@ func get_waypoint_direction():
 	var waypoint_dir = (-get_global_pos() + _waypoint_pos).normalized()
 	var rotation_dir = head_dir.dot(waypoint_dir)
 	return rotation_dir
+
+func _on_destroy_timeout():
+	frozen = false
+
+func add_damage(damage):
+	if get_node("destroy").get_time_left() == 0:
+		frozen = true
+		get_node("destroy").start()
+	
+
+func _on_Timer_timeout():
+	var fire = randf()
+	if fire > 0.7:
+		get_node("Nitro").fire_nitro()
+
+
+func _on_fire_timeout():
+	var fire = randf()
+	if fire > 0.7:
+		get_node("bullet_timer").start()
+
+func _on_bullet_timer_timeout():
+	get_node("Weapon").fire_weapon()
+	bullets_fired += 1
+	print(bullets_fired, bullets)
+	if bullets_fired == bullets:
+		get_node("bullet_timer").stop()
+		bullets_fired = 0
+
 

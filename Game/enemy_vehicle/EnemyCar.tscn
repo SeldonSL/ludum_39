@@ -1,7 +1,9 @@
-[gd_scene load_steps=4 format=1]
+[gd_scene load_steps=6 format=1]
 
 [ext_resource path="res://Game/enemy_vehicle/enemy_vehicle.gd" type="Script" id=1]
-[ext_resource path="res://Game/enemy_vehicle/vehicle.png" type="Texture" id=2]
+[ext_resource path="res://Game/player_vehicle/Nitro.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Game/Weapons/weapon_1.tscn" type="PackedScene" id=3]
+[ext_resource path="res://Game/enemy_vehicle/vehicle.png" type="Texture" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -16,8 +18,8 @@ input/pickable = false
 shapes/0/shape = SubResource( 1 )
 shapes/0/transform = Matrix32( 8.58082, 0, 0, 12.8189, 2.0954, 1.09309 )
 shapes/0/trigger = false
-collision/layers = 1
-collision/mask = 1
+collision/layers = 4
+collision/mask = 11
 mode = 0
 mass = 10.0
 friction = 1.0
@@ -44,10 +46,20 @@ wheel_grip_sticky = 0.85
 wheel_grip_slippery = 0.99
 drift_extremum = 250
 drift_asymptote = 20
+max_power = 100
+power_rate = 0.1
+bullets_fired = 0
+bullets = 4
+
+[node name="Nitro" parent="." instance=ExtResource( 2 )]
+
+action = "kkkk"
+
+[node name="Weapon" parent="." instance=ExtResource( 3 )]
 
 [node name="Sprite" type="Sprite" parent="."]
 
-texture = ExtResource( 2 )
+texture = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
@@ -60,5 +72,41 @@ _update_shape_index = 0
 [node name="head_pos" type="Position2D" parent="."]
 
 transform/pos = Vector2( 200, 0 )
+
+[node name="destroy" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 5.0
+one_shot = true
+autostart = false
+
+[node name="nitro" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 5.0
+one_shot = false
+autostart = true
+
+[node name="fire" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 4.0
+one_shot = false
+autostart = true
+
+[node name="bullet_timer" type="Timer" parent="."]
+
+process_mode = 1
+wait_time = 0.5
+one_shot = false
+autostart = false
+
+[connection signal="timeout" from="destroy" to="." method="_on_destroy_timeout"]
+
+[connection signal="timeout" from="nitro" to="." method="_on_Timer_timeout"]
+
+[connection signal="timeout" from="fire" to="." method="_on_fire_timeout"]
+
+[connection signal="timeout" from="bullet_timer" to="." method="_on_bullet_timer_timeout"]
 
 
