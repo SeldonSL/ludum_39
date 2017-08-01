@@ -1,20 +1,19 @@
 [gd_scene load_steps=4 format=1]
 
 [ext_resource path="res://Game/Weapons/bullet_1.gd" type="Script" id=1]
-[ext_resource path="res://Game/Weapons/bullet_player.png" type="Texture" id=2]
+[ext_resource path="res://Game/tutorial/bullet.png" type="Texture" id=2]
 
-[sub_resource type="CapsuleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=1]
 
 custom_solver_bias = 0.0
 radius = 10.0
-height = 20.0
 
 [node name="Bullet" type="Area2D"]
 
 transform/scale = Vector2( 1.2, 1.2 )
 input/pickable = true
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( 1.04396, 0, 0, 1.09113, 0.269805, -0.654173 )
+shapes/0/transform = Matrix32( 3, 0, 0, 3, 0.269805, -0.654173 )
 shapes/0/trigger = true
 gravity_vec = Vector2( 0, 1 )
 gravity = 98.0
@@ -30,13 +29,13 @@ Speed = 6000
 
 [node name="Sprite" type="Sprite" parent="."]
 
-transform/scale = Vector2( 1.5, 1.5 )
+transform/scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
 transform/pos = Vector2( 0.269805, -0.654173 )
-transform/scale = Vector2( 1.04396, 1.09113 )
+transform/scale = Vector2( 3, 3 )
 shape = SubResource( 1 )
 trigger = true
 _update_shape_index = 0

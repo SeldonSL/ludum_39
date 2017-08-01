@@ -41,7 +41,10 @@ var damage = 0
 var power= 100
 export var power_rate = 0.1
 var frozen = false
-
+var laps = 0
+var _current_waypoint  = 0
+var pos = 0
+var engine_sound = -1
 # Start
 func _ready():
 	# Top Down Physics
@@ -53,6 +56,7 @@ func _ready():
 	
 	set_fixed_process(true)
 
+	
 func _fixed_process(delta):
 	if Input.is_action_pressed(input_accelerate):
 		power -= delta * power_rate
@@ -61,7 +65,9 @@ func _fixed_process(delta):
 # Fixed Process
 func _integrate_forces(state):
 	if frozen:
+		get_node("Sprite").set_modulate(Color(0.3,0.3,0.3))
 		return
+	get_node("Sprite").set_modulate(Color(1,1,1))
 	# Drag (0 means we will never slow down ever. Like being in space.)	
 	_velocity *= drag_coefficient
 	var collision_torque = 0

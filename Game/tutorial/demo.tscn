@@ -1,18 +1,74 @@
-[gd_scene load_steps=10 format=1]
+[gd_scene load_steps=28 format=1]
 
 [ext_resource path="res://Game/tutorial/tilemap.scn" type="PackedScene" id=1]
 [ext_resource path="res://Game/player_vehicle/PlayerCar.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Game/enemy_vehicle/EnemyCar.tscn" type="PackedScene" id=3]
-[ext_resource path="res://icon.png" type="Texture" id=4]
+[ext_resource path="res://Game/tutorial/wall1.png" type="Texture" id=4]
 [ext_resource path="res://Game/waypoints/Waypoint.tscn" type="PackedScene" id=5]
 [ext_resource path="res://Game/tutorial/energy2.png" type="Texture" id=6]
 [ext_resource path="res://Game/tutorial/energy.png" type="Texture" id=7]
 [ext_resource path="res://Game/tutorial/power_bar.gd" type="Script" id=8]
+[ext_resource path="res://Game/tutorial/power_label.png" type="Texture" id=9]
+[ext_resource path="res://Game/tutorial/laps.png" type="Texture" id=10]
+[ext_resource path="res://Game/tutorial/pos.png" type="Texture" id=11]
+[ext_resource path="res://Ubuntu-C.ttf" type="DynamicFontData" id=12]
+[ext_resource path="res://Game/tutorial/3.png" type="Texture" id=13]
+[ext_resource path="res://Game/tutorial/2.png" type="Texture" id=14]
+[ext_resource path="res://Game/tutorial/1.png" type="Texture" id=15]
+[ext_resource path="res://Game/tutorial/game_over.png" type="Texture" id=16]
+[ext_resource path="res://Game/tutorial/win.png" type="Texture" id=17]
+[ext_resource path="res://Game/tutorial/engine.wav" type="Sample" id=18]
+[ext_resource path="res://Game/tutorial/Laser_Shoot8.wav" type="Sample" id=19]
+[ext_resource path="res://Game/tutorial/nitro.wav" type="Sample" id=20]
+[ext_resource path="res://Game/tutorial/Explosion4.wav" type="Sample" id=21]
+[ext_resource path="res://Game/tutorial/Pickup_Coin.wav" type="Sample" id=22]
+[ext_resource path="res://Game/tutorial/output2.ogg" type="AudioStream" id=23]
+[ext_resource path="res://Game/solar.tscn" type="PackedScene" id=24]
 
 [sub_resource type="RectangleShape2D" id=1]
 
 custom_solver_bias = 0.0
 extents = Vector2( 10, 10 )
+
+[sub_resource type="DynamicFont" id=2]
+
+font/size = 64
+font/use_mipmaps = false
+font/use_filter = false
+font/font = ExtResource( 12 )
+
+[sub_resource type="SampleLibrary" id=3]
+
+samples/engine = {
+"db": -10.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 18 )
+}
+samples/laser = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 19 )
+}
+samples/nitro = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 20 )
+}
+samples/run = {
+"db": -15.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 21 )
+}
+samples/start = {
+"db": 0.0,
+"pitch": 1.0,
+"priority": 0,
+"sample": ExtResource( 22 )
+}
 
 [node name="demo" type="Control"]
 
@@ -27,14 +83,17 @@ margin/bottom = 40.0
 
 [node name="tilemap" parent="." instance=ExtResource( 1 )]
 
+editor/display_folded = true
+transform/pos = Vector2( -3712.72, -7271.89 )
 transform/scale = Vector2( 5, 5 )
 
 [node name="PlayerCar" parent="." instance=ExtResource( 2 )]
 
-transform/pos = Vector2( 2096.11, 1606.37 )
+editor/display_folded = true
+transform/pos = Vector2( 3099.24, 1527.29 )
 transform/rot = -94.7198
+transform/scale = Vector2( 1, 1 )
 acceleration = 50
-max_forward_velocity = 4000
 power_rate = 0.5
 
 [node name="Camera2D" type="Camera2D" parent="PlayerCar"]
@@ -61,40 +120,37 @@ drag_margin/bottom = 0.2
 transform/pos = Vector2( 3631.94, 1300.83 )
 transform/rot = -78.4771
 acceleration = 50
-max_forward_velocity = 4000
 
 [node name="EnemyCar1" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 3919.15, 1795.47 )
 transform/rot = -81.7311
 acceleration = 50
-max_forward_velocity = 4000
 
 [node name="EnemyCar2" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 3296.86, 1939.07 )
 transform/rot = -89.8736
 acceleration = 50
-max_forward_velocity = 4000
+max_power = 500
 
 [node name="EnemyCar3" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 2676.89, 2235.23 )
 transform/rot = -89.8736
 acceleration = 50
-max_forward_velocity = 4000
 
 [node name="EnemyCar4" parent="." instance=ExtResource( 3 )]
 
 transform/pos = Vector2( 2952.94, 1050.6 )
 transform/rot = -89.8736
 acceleration = 50
-max_forward_velocity = 4000
+max_power = 500
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
 
 editor/display_folded = true
-transform/pos = Vector2( 8575.99, 1369.97 )
+transform/pos = Vector2( 2521.04, 12874.4 )
 transform/scale = Vector2( 3.92302, 2.93339 )
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
@@ -119,10 +175,66 @@ shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0
 
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+editor/display_folded = true
+transform/pos = Vector2( 1915.54, 6879.98 )
+transform/scale = Vector2( 3.92302, 2.93339 )
+input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 2.84918, 0, 0, 2.86874, -0.0695629, -0.969384 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="Sprite" type="Sprite" parent="StaticBody2D2"]
+
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+
+transform/pos = Vector2( -0.0695629, -0.969384 )
+transform/scale = Vector2( 2.84918, 2.86874 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+
+editor/display_folded = true
+transform/pos = Vector2( 9605.33, 19777 )
+transform/scale = Vector2( 3.92302, 2.93339 )
+input/pickable = false
+shapes/0/shape = SubResource( 1 )
+shapes/0/transform = Matrix32( 2.84918, 0, 0, 2.86874, -0.0695629, -0.969384 )
+shapes/0/trigger = false
+collision/layers = 1
+collision/mask = 1
+constant_linear_velocity = Vector2( 0, 0 )
+constant_angular_velocity = 0.0
+friction = 1.0
+bounce = 0.0
+
+[node name="Sprite" type="Sprite" parent="StaticBody2D3"]
+
+texture = ExtResource( 4 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+
+transform/pos = Vector2( -0.0695629, -0.969384 )
+transform/scale = Vector2( 2.84918, 2.86874 )
+shape = SubResource( 1 )
+trigger = false
+_update_shape_index = 0
+
 [node name="StaticBody2D1" type="StaticBody2D" parent="."]
 
 editor/display_folded = true
-transform/pos = Vector2( 7909.1, 2015.69 )
+transform/pos = Vector2( 8307.89, 1886.67 )
 transform/scale = Vector2( 3.92302, 2.93339 )
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
@@ -137,6 +249,7 @@ bounce = 0.0
 
 [node name="Sprite" type="Sprite" parent="StaticBody2D1"]
 
+transform/pos = Vector2( 0, -1.94995 )
 texture = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D1"]
@@ -149,30 +262,79 @@ _update_shape_index = 0
 
 [node name="Waypoint" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 13729.1, 1730.89 )
+transform/pos = Vector2( 8971.28, 1739.97 )
 transform/scale = Vector2( 50, 50 )
 
 [node name="Waypoint1" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 13729.1, 13630.9 )
+transform/pos = Vector2( 14939.8, 7636.62 )
 transform/scale = Vector2( 50, 50 )
 Number = 1
 
 [node name="Waypoint2" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 1976.72, 13689.9 )
+transform/pos = Vector2( 19647, 8126.22 )
 transform/scale = Vector2( 50, 50 )
 Number = 2
 
 [node name="Waypoint3" parent="." instance=ExtResource( 5 )]
 
-transform/pos = Vector2( 1947.19, 1671.83 )
+transform/pos = Vector2( 19660.7, 14105 )
 transform/scale = Vector2( 50, 50 )
 Number = 3
+
+[node name="Waypoint4" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 13562.9, 14461 )
+transform/scale = Vector2( 50, 50 )
+Number = 4
+
+[node name="Waypoint5" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 13562.9, 18689.4 )
+transform/scale = Vector2( 50, 50 )
+Number = 5
+
+[node name="Waypoint6" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 21248.5, 19052 )
+transform/scale = Vector2( 50, 50 )
+Number = 6
+
+[node name="Waypoint7" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 21321.1, 21807.2 )
+transform/scale = Vector2( 50, 50 )
+Number = 7
+
+[node name="Waypoint8" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 11387.7, 21807.2 )
+transform/scale = Vector2( 50, 50 )
+Number = 8
+
+[node name="Waypoint9" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 7146.04, 17710.6 )
+transform/scale = Vector2( 50, 50 )
+Number = 9
+
+[node name="Waypoint10" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 2396.86, 17420.6 )
+transform/scale = Vector2( 50, 50 )
+Number = 10
+
+[node name="Waypoint11" parent="." instance=ExtResource( 5 )]
+
+transform/pos = Vector2( 2446.18, 1737.45 )
+transform/scale = Vector2( 50, 50 )
+Number = 11
 Last = true
 
 [node name="ui" type="CanvasLayer" parent="."]
 
+process/pause_mode = 2
 layer = 1
 offset = Vector2( 0, 0 )
 rotation = 0.0
@@ -186,9 +348,9 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 margin/left = 180.0
-margin/top = 18.0
+margin/top = 24.0
 margin/right = 725.0
-margin/bottom = 115.0
+margin/bottom = 121.0
 range/min = 0.0
 range/max = 100.0
 range/step = 1.0
@@ -203,21 +365,172 @@ radial_fill/fill_degrees = 360.0
 radial_fill/center_offset = Vector2( 0, 0 )
 script/script = ExtResource( 8 )
 
-[node name="Label" type="Label" parent="ui"]
+[node name="Sprite" type="Sprite" parent="ui"]
 
-rect/scale = Vector2( 3, 3 )
+transform/pos = Vector2( 96.4696, 32.6839 )
+transform/scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 9 )
+
+[node name="Sprite 2" type="Sprite" parent="ui"]
+
+transform/pos = Vector2( 621.264, 40.1812 )
+transform/scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 10 )
+
+[node name="Sprite3" type="Sprite" parent="ui"]
+
+transform/pos = Vector2( 922.645, 33.3317 )
+transform/scale = Vector2( 0.5, 0.5 )
+texture = ExtResource( 11 )
+
+[node name="laps" type="Label" parent="ui"]
+
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 0
-margin/left = 51.0
-margin/top = 10.0
-margin/right = 91.0
-margin/bottom = 24.0
-text = "Power"
+margin/left = 704.0
+margin/top = -2.0
+margin/right = 744.0
+margin/bottom = 70.0
+custom_fonts/font = SubResource( 2 )
+text = "0"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
+[node name="pos" type="Label" parent="ui"]
 
-[editable path="PlayerCar"]
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 0
+margin/left = 1012.0
+margin/top = -2.0
+margin/right = 1052.0
+margin/bottom = 70.0
+custom_fonts/font = SubResource( 2 )
+text = "0"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="3" type="Sprite" parent="ui"]
+
+transform/pos = Vector2( 1175.7, 444.907 )
+transform/scale = Vector2( 3, 3 )
+texture = ExtResource( 13 )
+
+[node name="2" type="Sprite" parent="ui"]
+
+visibility/visible = false
+transform/pos = Vector2( 1175.7, 444.907 )
+transform/scale = Vector2( 3, 3 )
+texture = ExtResource( 14 )
+
+[node name="1" type="Sprite" parent="ui"]
+
+visibility/visible = false
+transform/pos = Vector2( 1175.7, 444.907 )
+transform/scale = Vector2( 3, 3 )
+texture = ExtResource( 15 )
+
+[node name="t3" type="Timer" parent="ui"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = true
+autostart = true
+
+[node name="t2" type="Timer" parent="ui"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = true
+autostart = false
+
+[node name="t1" type="Timer" parent="ui"]
+
+process_mode = 1
+wait_time = 1.0
+one_shot = true
+autostart = false
+
+[node name="game_over" type="Sprite" parent="ui"]
+
+visibility/visible = false
+transform/pos = Vector2( 614.782, 456.333 )
+texture = ExtResource( 16 )
+
+[node name="win" type="Sprite" parent="ui"]
+
+visibility/visible = false
+transform/pos = Vector2( 614.782, 456.333 )
+texture = ExtResource( 17 )
+
+[node name="sound" type="SamplePlayer" parent="."]
+
+config/polyphony = 10
+config/samples = SubResource( 3 )
+default/volume_db = 0.0
+default/pitch_scale = 1.0
+default/pan = 0.0
+default/depth = 0.0
+default/height = 0.0
+default/filter/type = 0
+default/filter/cutoff = 5000.0
+default/filter/resonance = 1.0
+default/filter/gain = 1.0
+default/reverb_room = 2
+default/reverb_send = 0.0
+default/chorus_send = 0.0
+
+[node name="StreamPlayer" type="StreamPlayer" parent="."]
+
+stream/stream = ExtResource( 23 )
+stream/play = false
+stream/loop = true
+stream/volume_db = 0.0
+stream/autoplay = true
+stream/paused = false
+stream/loop_restart_time = 0.0
+stream/buffering_ms = 500
+
+[node name="solar" parent="." instance=ExtResource( 24 )]
+
+transform/pos = Vector2( 5109.46, 1591.18 )
+transform/scale = Vector2( 20, 20 )
+
+[node name="solar1" parent="." instance=ExtResource( 24 )]
+
+transform/pos = Vector2( 2699.01, 11431.9 )
+transform/scale = Vector2( 20, 20 )
+
+[node name="solar2" parent="." instance=ExtResource( 24 )]
+
+transform/pos = Vector2( 12843.5, 13906.7 )
+transform/scale = Vector2( 20, 20 )
+
+[node name="solar3" parent="." instance=ExtResource( 24 )]
+
+transform/pos = Vector2( 9101.77, 19468.8 )
+transform/scale = Vector2( 20, 20 )
+
+[node name="solar4" parent="." instance=ExtResource( 24 )]
+
+transform/pos = Vector2( 22046.3, 22603.8 )
+transform/scale = Vector2( 20, 20 )
+
+[node name="solar5" parent="." instance=ExtResource( 24 )]
+
+transform/pos = Vector2( 2021.95, 9427.07 )
+transform/scale = Vector2( 20, 20 )
+
+[connection signal="timeout" from="ui/t3" to="ui/power_bar" method="_on_t3_timeout"]
+
+[connection signal="timeout" from="ui/t2" to="ui/power_bar" method="_on_t2_timeout"]
+
+[connection signal="timeout" from="ui/t1" to="ui/power_bar" method="_on_t1_timeout"]
+
+
+[editable path="tilemap"]

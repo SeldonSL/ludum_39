@@ -38,6 +38,7 @@ var power= 100
 export var power_rate = 0.1
 export var bullets_fired = 0
 export var bullets = 4
+var laps = 0
 
 # Start
 func _ready():
@@ -50,11 +51,20 @@ func _ready():
 	
 	set_fixed_process(true)
 
+func _fixed_process(delta):
+	power -= delta * power_rate
 
 # Fixed Process
 func _integrate_forces(state):
 	if frozen:
+		get_node("Sprite").set_modulate(Color(0.3,0.3,0.3))
 		return
+
+	if power == 0:
+		get_node("Sprite").set_modulate(Color(0.3,0.3,0.3))
+		return
+		
+	get_node("Sprite").set_modulate(Color(1,1,1))
 	var steer_dir = -get_waypoint_direction()
 	# Drag (0 means we will never slow down ever. Like being in space.)	
 	_velocity *= drag_coefficient
@@ -118,6 +128,7 @@ func _integrate_forces(state):
 	state.set_linear_velocity(_velocity)
 
 
+
 # Returns up direction (vehicle's forward direction)
 func get_up():
 	return Vector2(cos(get_rot() + PI/2.0), sin(get_rot() - PI/2.0))
@@ -156,8 +167,12 @@ func add_damage(damage):
 
 func _on_Timer_timeout():
 	var fire = randf()
-	if fire > 0.7:
-		get_node("Nitro").fire_nitro()
+	if fire > 0.5:
+		var steer_dir = -get_waypoint_direction()
+		print(steer_dir)
+		if abs(steer_dir) < 0.3:
+			get_node("Nitro").fire_nitro()
+			power -= 5
 
 
 func _on_fire_timeout():

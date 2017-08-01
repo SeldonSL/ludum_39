@@ -3,7 +3,7 @@
 [ext_resource path="res://Game/enemy_vehicle/enemy_vehicle.gd" type="Script" id=1]
 [ext_resource path="res://Game/player_vehicle/Nitro.tscn" type="PackedScene" id=2]
 [ext_resource path="res://Game/Weapons/weapon_1.tscn" type="PackedScene" id=3]
-[ext_resource path="res://Game/enemy_vehicle/vehicle.png" type="Texture" id=4]
+[ext_resource path="res://Game/tutorial/vehicle_enemy.png" type="Texture" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 
@@ -16,7 +16,7 @@ radius = 10.0
 
 input/pickable = false
 shapes/0/shape = SubResource( 1 )
-shapes/0/transform = Matrix32( 8.58082, 0, 0, 12.8189, 2.0954, 1.09309 )
+shapes/0/transform = Matrix32( 8, 0, 0, 15, 0, 0 )
 shapes/0/trigger = false
 collision/layers = 4
 collision/mask = 11
@@ -37,7 +37,7 @@ damp_override/linear = -1.0
 damp_override/angular = -1.0
 script/script = ExtResource( 1 )
 acceleration = 18
-max_forward_velocity = 2000
+max_forward_velocity = 3000
 drag_coefficient = 0.99
 steering_torque = 3.75
 steering_damp = 8
@@ -46,7 +46,7 @@ wheel_grip_sticky = 0.85
 wheel_grip_slippery = 0.99
 drift_extremum = 250
 drift_asymptote = 20
-max_power = 100
+max_power = 1000
 power_rate = 0.1
 bullets_fired = 0
 bullets = 4
@@ -57,14 +57,16 @@ action = "kkkk"
 
 [node name="Weapon" parent="." instance=ExtResource( 3 )]
 
+action = "kk"
+
 [node name="Sprite" type="Sprite" parent="."]
 
+transform/scale = Vector2( 0.4, 0.4 )
 texture = ExtResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 
-transform/pos = Vector2( 2.0954, 1.09309 )
-transform/scale = Vector2( 8.58082, 12.8189 )
+transform/scale = Vector2( 8, 15 )
 shape = SubResource( 1 )
 trigger = false
 _update_shape_index = 0

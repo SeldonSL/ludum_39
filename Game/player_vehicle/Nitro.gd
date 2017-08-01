@@ -20,6 +20,7 @@ func _ready():
 func _input(event):
 	if(event.type == Input.is_action_pressed(action) and get_node('Timer').get_time_left() == 0):
 		fire_nitro()
+		get_parent().get_parent().get_node("sound").play("nitro")
 
 func fire_nitro():
 	prev_acc = vehicle.acceleration

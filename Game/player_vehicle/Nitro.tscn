@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=1]
 
 [ext_resource path="res://Game/player_vehicle/Nitro.gd" type="Script" id=1]
-[ext_resource path="res://icon.png" type="Texture" id=2]
+[ext_resource path="res://Game/tutorial/smoke.png" type="Texture" id=2]
 
 [node name="Nitro" type="Node2D"]
 
@@ -35,7 +35,7 @@ params/radial_accel = 0.0
 params/tangential_accel = 0.0
 params/damping = 0.0
 params/initial_angle = 0.0
-params/initial_size = 1.0
+params/initial_size = 0.5
 params/final_size = 0.0
 params/hue_variation = 0.0
 params/anim_speed_scale = 1.0
